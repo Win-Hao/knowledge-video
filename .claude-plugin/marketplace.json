@@ -1,0 +1,14 @@
+{
+  "name": "knowledge-video",
+  "owner": {
+    "name": "Win-Hao"
+  },
+  "plugins": [
+    {
+      "name": "knowledge-video",
+      "source": "./",
+      "description": "Turn one topic into a 1–3 minute knowledge explainer video, six steps with a stop for your OK after each, rendered with HyperFrames."
+    }
+  ],
+  "description": "knowledge-video: turn one topic into a knowledge explainer video. The agent researches and fact-checks it into a sourced article, rewrites it as scene-by-scene copy, lists freely licensed images, offers three looks, analyzes the music's beats to write the storyboard, renders the first 10 seconds for approval and then the whole video. Tested end to end with Claude Code."
+}

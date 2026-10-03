@@ -1,0 +1,18 @@
+{
+  "name": "knowledge-video",
+  "version": "0.1.0",
+  "description": "Turn one topic into a 1–3 minute knowledge explainer video: fact-checked article → scene-by-scene copy → freely licensed images → three looks to pick from → beat-synced storyboard → render the opening first, then the whole video. Stops after each step for your OK. Rendered with HyperFrames.",
+  "keywords": [
+    "skill",
+    "video",
+    "explainer",
+    "knowledge",
+    "storyboard",
+    "hyperframes",
+    "beat-sync"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Win-Hao"
+  }
+}
