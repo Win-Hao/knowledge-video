@@ -1,7 +1,7 @@
 <h1 align="center">knowledge-video</h1>
 
 <p align="center">
-  <em>Turn one topic into a 1–3 minute knowledge explainer video. Six steps, and the agent stops after each one for your OK.</em>
+  <em>Turn one topic into a knowledge explainer people want to watch to the end. A path to follow, not a script: the agent designs each video itself.</em>
 </p>
 
 <p align="center">
@@ -24,15 +24,15 @@
 
 An agent skill for the kind of knowledge video that took off under Douyin's #Vibe知识大赏 tag: animation drawn in code, short lines of on-screen text over music, two or three minutes on one idea. The agent doesn't generate video; it researches, writes, and builds a [HyperFrames](https://www.npmjs.com/package/hyperframes) project that renders to MP4.
 
-Most of the skill is about **not wasting a render**. A two-minute video takes a long time to render, and a wrong direction wastes all of it, so the work is split into six steps and the agent stops after each one: you fix a sentence in the article, the copy or the storyboard, which is far cheaper than fixing the finished video. The last step renders only the first ten seconds; the full video comes after you approve the opening.
+The skill stays deliberately light. It holds only a few hard rules (every fact sourced, every asset licensed, no AI-drawn faces of real people, frames that render the same every time), a path that works (research → copy → images → look and storyboard → render, showing you each step by default so a wrong direction is caught before a long render), and small tools for music edits, beat timing, sound effects and self-checks. How the video is written, looks and moves is left to the agent; what earlier videos taught sits in `references/` as examples, not rules. The steps below are the path as it was first tested.
 
 ## Six steps
 
 | Step | What the agent does | What you check |
 |---|---|---|
-| ① Research | searches the web, writes a sourced article: 8–10 key moments for a history, 5–8 points for a principle; **cuts anything without a reliable source** | what was cut, what is second-hand |
+| ① Research | decides what shape the topic has (timeline, chain of causes, shallow to deep, side by side, Q&A, story), searches the web, writes a sourced article with more candidate points than needed; **cuts anything without a reliable source**; offers two or three options for how many points to cover | how many points (your pick), what was cut, what is second-hand |
 | ② Copy | rewrites it as scene-by-scene screens, ≤ 20 characters each; the first screen is the question itself, then a story, an everyday comparison, one twist, an ending about ordinary people | the opening question, the length |
-| ③ Images | lists one real image per scene (old photo, paper, object, diagram) with URL, which part to capture, license and author; public domain / CC0 first; writes the attribution text | the licenses; you capture the images, or let it save them |
+| ③ Images | either lists real images per scene (old photo, paper, object, diagram) with URL, which part to capture, license and author, public domain / CC0 first; or writes layered prompts (one background + separate subjects, one shared style prefix, no text, no real faces) for your own image generator | the licenses or the prompts; you capture or generate the images |
 | ④ Look + storyboard | three clearly different looks as stills of the first screen, with a recommendation; then measures the music's tempo and bars (`scripts/beats.py`) and writes every shot to a bar and beat, with the reveal and the twist on the music's changes | pick a look; review the storyboard |
 | ⑤ Review | applies your changes, re-aligns to the beats, says which hits moved | — |
 | ⑥ Render | renders the opening (~10 s), checks sampled frames for clipped or tiny text, wrong years and off-beat moves, fixes them, then the full video after your OK | the opening |
@@ -44,52 +44,19 @@ Two runs, both in an empty folder with Claude Code and Claude Opus 5.5:
 - **A brief history of AI**, by typing the six steps by hand (no skill): about 58 minutes of agent time from the first prompt to the opening. The run is written up step by step in [`references/example-ai-history.md`](skills/knowledge-video/references/example-ai-history.md) (Chinese).
 - **Why is the sky blue?**, with the skill and one sentence — "I want to make a knowledge video about why the sky is blue; the music is in the folder." The skill triggered by itself and stopped after every step; six rounds, about 43 minutes to the opening. Along the way it cut three claims it couldn't trace to a primary source, found 15 freely licensed images and flagged a NASA panorama whose white balance would make Mars's sky look blue, landed the reveal on the bar where the music first gets louder, and fixed six problems its own frame check found before handing over the opening.
 
-## Doing it by hand: the six steps as prompts
+## Without the skill: one prompt
 
-The skill grew out of these prompts, which also work without it. They are the tested Chinese originals (translated here); swap the parts in 【】 for your own.
+No skill installed? Send the prompt below to an agent and replace 【】 with your topic. Before each step it fills the tags into a complete prompt for that step, shows you, then follows it (handing the filled prompt to a subagent where it can). The six original prompts from the first test are in the git history.
 
 <details>
-<summary>The prompts</summary>
+<summary>The prompt</summary>
 
-① Research
 ```
-<role>You are a science writer who cares most about getting facts right.</role>
-<task>Search the web for 【a brief history of AI】. Pick 【8 to 10 key moments】; for each, say what year, who, what they did, and why it matters. Write it up as an article and save it as article.md.</task>
-<check>Every year, name, number and quote needs a source, linked at the end of its paragraph; cut any moment you can't find a reliable source for.</check>
-```
-
-② Copy
-```
-<role>You write short knowledge videos and are good at explaining hard things to people who know nothing about them.</role>
-<context>This becomes a 【2-minute landscape】 video with 【no narration — viewers only read the on-screen text over music】, so every line has to be short and clear at a glance.</context>
-<task>Rewrite article.md as video copy, scene by scene, and save it as script.md: open with a question for viewers to guess; tell the middle as a story with at least one everyday comparison and one twist; end on what it means for an ordinary person.</task>
-<avoid>Jargon without an explanation; more than 20 characters on one screen; any fact that isn't in article.md.</avoid>
-```
-
-③ Images
-```
-<context>The video can't be text only; every scene needs one real image (【an old photo, a paper's first page, what the machine looked like】). 【I'll capture the images from web pages myself.】</context>
-<task>Go through script.md scene by scene and list the images: which URL, which part of the page to capture, which scene it's for. Save it as images.md.</task>
-<avoid>Images marked "all rights reserved" or of unknown origin. Prefer public domain and freely licensed ones, and give the source and license of each.</avoid>
-```
-
-④ Look, then storyboard
-```
-<task>The images I captured are in the assets folder. Build this video with HyperFrames. First give me three clearly different looks, each as a 1920×1080 still of the opening scene, with one line on why it fits. Don't go further until I pick.</task>
-<avoid>Dark backgrounds with neon glow; all text stacked in the center; purple gradients; everything fading in and out.</avoid>
-```
-```
-<role>You are a motion director who cares most about rhythm.</role>
-<task>Using look 【C】, write the storyboard as storyboard.md: for each shot, how many seconds, what's on screen, the text, which image, how it moves. Turn the screenshots into this look's style instead of pasting them in. The music is 【bgm.mp3】 in this folder: find its beats first and put the cuts on them. Stop when it's written and wait for my review.</task>
-<specs>【Landscape 1920×1080】, 30 frames per second, length follows the copy.</specs>
-```
-
-⑤ Review — just say what to change, no tags needed, e.g. "Don't open with 'here's a quiz'; show the question in the very first second."
-
-⑥ Render
-```
-<task>The storyboard is fine, build it. Render only the first 10 seconds to MP4 for me first; I'll ask for the full video once I'm happy with it.</task>
-<check>When done, sample a few frames yourself: is any text outside the frame, overlapping or too small; do the years match the copy; do the cuts land on the beats. Fix anything before handing it over.</check>
+<task>Help me turn 【your topic】 into a knowledge video, along the path research → copy → images → look and storyboard → render. Start by writing a brief, prompts/brief.md; before each step, fill in that step's prompt, save it as prompts/<step>.md, show me, then follow it. Hand large self-contained steps (research, finding images, writing the composition and rendering) to a subagent with the brief and the step's prompt, and check what it produces.</task>
+<context>The brief has one context tag: the topic, audience, takeaway, length, orientation, music, what I like and dislike, what earlier steps settled, where the files are; update it after each step.
+Each step's prompt has four tags: role (which role does this step and what it cares about most, e.g. knowledge editor, screenwriter, art director, storyboard artist, motion designer, picked per step); task (what it produces and where it goes); style (recommended approaches with reasons; recommendations, not rules; follow me where I've said what I want); check (what to verify, item by item, before the step is done). Leave out style where it isn't needed.
+Infer what I haven't said from the topic, and ask me when unsure.</context>
+<check>Every fact sourced, and anything unsourced left out; images, music, sound effects and fonts licensed, credits in credits.md; no AI-drawn faces of real people; watch the whole video yourself before handing it over.</check>
 ```
 
 </details>
@@ -146,9 +113,14 @@ cp -R knowledge-video/skills/* ~/.claude/skills/   # Claude Code
 
 ```
 skills/knowledge-video/
-  SKILL.md                         the six steps
+  SKILL.md                         the path, the hard rules, fill-then-follow prompts
   scripts/beats.py                 tempo, beats, bar lines and loudness changes (numpy + FFmpeg)
-  references/example-ai-history.md a full tested run, step by step (Chinese)
+  scripts/music_loops.py           bars that repeat or cut without an audible seam
+  scripts/cut_music.py             rebuild the music from a bar list, beat grid exact
+  scripts/timing.py                lay every screen of the copy onto the beat grid
+  scripts/sfx.py                   download Kenney's CC0 foley, mix sound-effect cues
+  scripts/qa.py                    contact sheets of every screen and key beats
+  references/                      examples and lessons from tested videos (not rules)
 docs/hero.gif
 ```
 
