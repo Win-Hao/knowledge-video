@@ -13,3 +13,12 @@ Check here first when a render fails, the picture is off, something vanishes or 
 - Audio peaks failing the last step, failed renders hidden by a pipe: see `sound.md`
 - Detailed pictures render large at `--quality delivery` (about 870 MB for 3.5 minutes); re-encode with `-c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -c:a aac -b:a 256k -movflags +faststart` (about 400 MB, no visible difference)
 - Render time on an Apple-silicon Mac: 13-second opening about 35 s; 3.5 minutes 4.5 min (plain) to 8 min (dense collage)
+
+## Canvas animation (10-06, *Fish and Bear's Paw*)
+
+- One full-screen `<canvas>`, every dot and line drawn by `draw(t)`; a proxy tween from 0 to the full duration on the main timeline calls `draw(proxy.t)` in `onUpdate`, so every rendered frame is right. Seed the PRNG
+- Labels that move with the camera are drawn on the canvas (`fillText`); text that stays put on screen (captions, readouts) is DOM. Hide on-screen readouts while the camera rotates, or they sit on top of the turned picture
+- Keep the template in `src/`, not the project root: a second HTML with `data-composition-id` in the root fails lint with `multiple_root_compositions`
+- If `pyftsubset` isn't on PATH, use `python3 -m fontTools.subset`
+- Typewriter text: a centered line revealed by hidden spans sits off to the left at frame 0; show the first line whole at frame 0 and type the second
+- Film grain that changes every frame bloats the render (1.8 GB for 3 minutes, still 900 MB re-encoded); one static grain tile brings the re-encoded file to about 135 MB

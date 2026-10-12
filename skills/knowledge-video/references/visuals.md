@@ -32,3 +32,17 @@ Red circles, lines and crosses sit above photo cards, logo tags and stickers (be
 ## Company and product logos
 
 LobeHub's open icons (npm `@lobehub/icons-static-svg`, MIT; `npm pack` gives a folder of SVGs: openai, deepmind-color, deepseek-color, anthropic, claudecode-color, google-color…) as small "logo + name" tags, used only to refer to the company, shape and color unchanged.
+
+## Night-sky particles (the *Information Theory* look, tested 10-06 on *Fish and Bear's Paw*)
+
+The author's verdict on the first version: "the motion barely changes; it looks far worse than *Information Theory*". One scatter plot held the screen for over half the video, the camera never moved, and the background was a single layer of stars. The author found the second version "better, not so stiff". Below is what it did; with a new topic, rethink the pictures for that topic. What carries over is the thinking, not these scenes.
+
+- **Find something that moves for each idea**: "one up, the other down" became a seesaw, "all alike" a row of identical empty shells, "not noticed" a sieve sweeping across. 18 scenes in 3 minutes; no picture held the screen for long
+- **The last picture becomes the next** instead of cutting: the title's particles fall into the windows of a night city, then rise from the windows into the plot; the opening seesaw comes back sitting on the red line
+- The camera pushes in, pulls out, whips to another scene, and turns 45° and pushes in for the payoff line
+- **Light** (technique, useful whatever the topic): a radial-gradient sprite drawn with `lighter` blending (not `shadowBlur` on thousands of dots); lines stroked three times (wide and faint, medium, thin and bright) for glow, with a comet head while drawing; a slowly drifting nebula, three parallax star layers, a few shooting stars, a vignette
+- Colors mean something: gold = people still in your eyes, grey-blue = sifted out, pale cyan = taken by someone else, red = the line the sieves drew
+- Changes in the data are actions: people sifted out fall like sand, people taken rise away as lanterns, the restoration plays it backwards; the key step of the reasoning is labelled in the picture ("plain, but very kind ✓", "average at both · never noticed ✗")
+- Particle title: render the title in the same font to a bitmap and take 1000 points by farthest-point sampling
+- **Keep the caption strip clear when the camera pushes in**: a push-in moves the axis and its labels down into the captions (at 80 s the "looks →" label sat on the caption). For each camera keyframe, check where the lowest thing lands: screen y = 540 + (scene y − camera center y) × zoom
+- Film grain as one **static** tile at low opacity. Grain that changes every frame bloats the file (1.8 GB for 3 minutes), and the platform's re-encode turns it into blocks

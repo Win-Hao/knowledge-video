@@ -40,7 +40,7 @@ Per Anthropic's [prompting guide](https://platform.claude.com/docs/en/build-with
 - **Assets are usable**: images, music, sound effects and fonts are licensed for this (check the file page); credits go in `credits.md`
 - **No AI-drawn faces of real people**; if the video uses AI illustrations, turn on the platform's "AI-generated content" label
 - **The picture depends only on time**: seed any randomness so a frame renders the same every time (HyperFrames needs this)
-- Before delivering, watch the whole thing yourself: text visible and readable in time, years and numbers match the article, sound and picture in sync
+- Before delivering, watch the whole thing yourself: text visible, readable in time and understandable (no skipped steps in the reasoning; any suspense pays off later), years and numbers match the article, sound and picture in sync
 
 ## Tools at hand
 
@@ -59,9 +59,10 @@ HyperFrames for the picture (`npx hyperframes init / docs / check / snapshot / r
 References, not rules. Design for this topic first; look here when unsure or when you hit the same problem:
 
 - `references/example-ai-history.md`: the first tested run, each step's output and timing
+- `references/example-fish-and-bears-paw.md`: the night-sky particle look of *Information Theory*, revised three times (motion too flat → copy hard to follow)
 - `references/prompt-examples.md`: two filled prompts from a tested video, to see how detailed they get
-- `references/notes.md`: observations on copy and pacing
+- `references/notes.md`: observations on copy and pacing, including how to make a chain of reasoning land
 - `references/images.md`: checking licenses, writing prompts, generating in layers
-- `references/visuals.md`: dense collage, timeline moments, photo cards, fitting UI onto generated screens, what to draw in code
+- `references/visuals.md`: dense collage, night-sky particles, timeline moments, photo cards, fitting UI onto generated screens, what to draw in code
 - `references/sound.md`: music edits, sound effects, loudness
 - `references/pitfalls.md`: check first when a render fails or the picture is off
